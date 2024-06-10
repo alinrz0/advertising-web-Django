@@ -1,63 +1,22 @@
+{% extends 'base.html' %}
 {% load static %}
-{% comment %} <link rel="stylesheet" href= "{% static "ads/ads_list.css" %}"> {% endcomment %}
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block custom_tags %}
     <title>صفحه آگهی‌ها</title>
-    <link rel="stylesheet" href= "{% static "ads/ads_list.css" %}">
+    <link rel="stylesheet" href= "{% static 'ads/ads_list.css' %}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <style>
-        .ad-section {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        .ad-card {
-            width: 48%;
-            margin-bottom: 20px;
-        }
-        @media screen and (min-width: 768px) {
-            .ad-card {
-                width: 23%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="main-container">
-        <section class="ad-section">
-            <div class="ad-card">
-                <img src="https://via.placeholder.com/150" alt="آگهی 1">
-                <div class="ad-content">
-                    <h2>آگهی 1</h2>
-                    <p>جزئیات آگهی 1</p>
-                </div>
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <section class="ad-section">
+        {% for ad in ads %}
+        <div class="ad-card p-3 m-2">
+            <img src="{% static ad.IMG_Link  %}" alt="Your Image" class="img-fluid">
+            <div class="ad-content p-2">
+                <h1 class="text-center">{{ ad.Title }}</h1>
             </div>
-            <div class="ad-card">
-                <img src="https://via.placeholder.com/150" alt="آگهی 2">
-                <div class="ad-content">
-                    <h2>آگهی 2</h2>
-                    <p>جزئیات آگهی 2</p>
-                </div>
-            </div>
-            <div class="ad-card">
-                <img src="https://via.placeholder.com/150" alt="آگهی 3">
-                <div class="ad-content">
-                    <h2>آگهی 3</h2>
-                    <p>جزئیات آگهی 3</p>
-                </div>
-            </div>
-            <div class="ad-card">
-                <img src="https://via.placeholder.com/150" alt="آگهی 4">
-                <div class="ad-content">
-                    <h2>آگهی 4</h2>
-                    <p>جزئیات آگهی 4</p>
-                </div>
-            </div>
-            <!-- Repeat this block for additional ads -->
-        </section>
-    </div>
-</body>
-</html>
+        </div>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}
