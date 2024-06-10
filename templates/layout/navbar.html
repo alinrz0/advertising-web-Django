@@ -1,4 +1,5 @@
 <!-- Navbar-->
+{% load static %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" >
     <div class="container-fluid justify-content-between">
       <!-- Left elements -->
@@ -6,8 +7,8 @@
         <!-- Brand -->
         <a class="navbar-brand me-3 mb-1 d-flex align-items-center" href="#">
           <img
-            src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
-            height="20"
+            src="{% static 'img/logo.png' %}"
+            height="33"
             alt="MDB Logo"
             loading="lazy"
             style="margin-top: 2px;"
@@ -85,7 +86,7 @@
           alt="Black and White Portrait of a Man"
           loading="lazy"
         />
-        <strong class="d-none d-sm-block ms-1" style="font-size: 1.3rem;">John</strong>
+        <strong class="d-none d-sm-block ms-2" style="font-size: 1.3rem;">John</strong>
       </a>
     </li>
 

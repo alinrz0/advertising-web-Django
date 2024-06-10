@@ -2,6 +2,7 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     direction: ltr;
+    background-color: rgb(203, 194, 215);
 }
 
 .header {
@@ -18,7 +19,9 @@ body {
     align-items: center;
 }
 
-.header-left a, .header-left button, .header-left .material-icons {
+.header-left a,
+.header-left button,
+.header-left .material-icons {
     margin: 0 10px;
     color: #555;
     text-decoration: none;
@@ -57,6 +60,18 @@ body {
 .main-container {
     display: flex;
     margin: 20px;
+    text-decoration: none;
+    color: black;
+}
+
+.main-container a h3 {
+    color: black;
+    text-decoration: none;
+}
+
+.main-container a p {
+    color: black;
+    text-decoration: none;
 }
 
 .sidebar {
@@ -120,4 +135,11 @@ body {
 
 .ad-card:hover {
     transform: translateY(-5px);
+    color: black;
+    text-decoration: none;
+}
+
+.main-container:hover {
+    color: black;
+    text-decoration: none;
 }

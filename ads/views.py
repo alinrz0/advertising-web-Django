@@ -1,17 +1,30 @@
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import TemplateView,DetailView
 from django.db import connections
 
-class AdListView(ListView):
-    template_name = 'ads/ads_list.html'
-    context_object_name = "ads"
+from django.template.response import TemplateResponse
+from django.db import connections,connection
+from django.http import Http404
 
-    def get_queryset(self):
+class AdListView(TemplateView):
+    template_name = 'ads/ads_list.html'
+
+    def get(self, request):
         with connections['default'].cursor() as cursor:
-            query="SELECT a.*, i.* FROM mydb.ads a LEFT JOIN ( SELECT Ad_ID, MIN(img_id) as min_img_id FROM img_of_ad GROUP BY Ad_ID ) i_sub ON a.Ad_ID = i_sub.Ad_ID LEFT JOIN img_of_ad i ON i_sub.Ad_ID = i.Ad_ID AND i_sub.min_img_id = i.img_id;"
+            query = """
+                SELECT a.*, i.IMG_Link,i.IMG_ID
+                FROM mydb.ads a 
+                LEFT JOIN ( 
+                    SELECT Ad_ID, MIN(img_id) as min_img_id 
+                    FROM img_of_ad 
+                    GROUP BY Ad_ID 
+                ) i_sub ON a.Ad_ID = i_sub.Ad_ID 
+                LEFT JOIN img_of_ad i ON i_sub.Ad_ID = i.Ad_ID AND i_sub.min_img_id = i.img_id 
+                ORDER BY a.Add_Time DESC;
+            """
             cursor.execute(query)
             rows = self.dictfetchall(cursor)
-        return rows
+        return TemplateResponse(request, self.template_name, {'ads': rows})
 
     def dictfetchall(self, cursor):
         columns = [col[0] for col in cursor.description]
@@ -22,8 +35,22 @@ class AdListView(ListView):
 
 
 
+class AdDetailView(DetailView):
+    template_name = 'ads/ad_detail.html'
+    context_object_name='ad'
 
+    def get_object(self):
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM ads WHERE Ad_ID = %s", [self.kwargs['pk']])
+            result = cursor.fetchone()
+            if result:
+                return dict(zip([col[0] for col in cursor.description], result))
+            else:
+                return {}  # or return a default ad object
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 # import mysql.connector
 # from django.shortcuts import render
