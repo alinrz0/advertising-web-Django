@@ -9,7 +9,11 @@
 {% block content %}
 <section class="ad-section">
     {% for ad in ads %}
+<<<<<<< HEAD
     <a class="main-container" href="{% url 'ad_detail' ad.Title ad.Ad_ID  %}">
+=======
+    <a class="main-container" href="{% url 'ad_detail' ad.Ad_ID %}">
+>>>>>>> 25138200c661c10e0f2ad703afa3b5e2c53041a1
         <div class="ad-card p-3 m-2">
             <img src="{% static ad.IMG_Link|default:'img/no_images.png' %}" alt="Your Image" class="img-fluid">
             <div class="ad-content p-2">

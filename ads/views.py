@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from django.shortcuts import render,redirect
 from django.views.generic import TemplateView,DetailView
 from django.db import connections
@@ -7,6 +8,16 @@ from django.template.response import TemplateResponse
 from django.db import connections,connection
 
 
+=======
+from django.shortcuts import render
+from django.views.generic import TemplateView,DetailView
+from django.db import connections
+
+from django.template.response import TemplateResponse
+from django.db import connections,connection
+from django.http import Http404
+
+>>>>>>> 25138200c661c10e0f2ad703afa3b5e2c53041a1
 class AdListView(TemplateView):
     template_name = 'ads/ads_list.html'
 
@@ -21,7 +32,10 @@ class AdListView(TemplateView):
                     GROUP BY Ad_ID 
                 ) i_sub ON a.Ad_ID = i_sub.Ad_ID 
                 LEFT JOIN img_of_ad i ON i_sub.Ad_ID = i.Ad_ID AND i_sub.min_img_id = i.img_id 
+<<<<<<< HEAD
                 WHERE a.AD_STATUS='ACCEPTED'
+=======
+>>>>>>> 25138200c661c10e0f2ad703afa3b5e2c53041a1
                 ORDER BY a.Add_Time DESC;
             """
             cursor.execute(query)
@@ -39,6 +53,7 @@ class AdListView(TemplateView):
 
 class AdDetailView(DetailView):
     template_name = 'ads/ad_detail.html'
+<<<<<<< HEAD
     context_object_name = 'ad'
 
     def get_object(self):
@@ -70,6 +85,22 @@ class AdDetailView(DetailView):
                 return ad_data
             else:
                 return {}  # or return a default ad object
+=======
+    context_object_name='ad'
+
+    def get_object(self):
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM ads WHERE Ad_ID = %s", [self.kwargs['pk']])
+            result = cursor.fetchone()
+            if result:
+                return dict(zip([col[0] for col in cursor.description], result))
+            else:
+                return {}  # or return a default ad object
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+>>>>>>> 25138200c661c10e0f2ad703afa3b5e2c53041a1
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
