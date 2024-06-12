@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>{{ ad.title }}</title>
+{% endblock %}
+
+{%block custom_tags%}
+    <link rel="stylesheet" href="{% static 'ads/ad_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="custome-container">
+        <div class="ad-details">
+            <h1 class="text-center">{{ ad.Title }}</h1><hr style="border-bottom:  black">
+            <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px">{% if ad.Identifier == "USER" %}<strong>Name:</strong>{{ ad.First_Name }} {{ ad.Last_Name }}{% elif ad.Identifier == "BUSINESS" %}<strong>Business Name:</strong>{{ ad.Business_Name }}{% endif %}</p>
+            <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px"><strong>Category:</strong> {{ ad.Category_Name }}</p>
+            <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px"><strong>Price:</strong>  {{ ad.Price }}</p>
+            <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px">{% if ad.Identifier == "USER" %}<strong>Phone:</strong>{{ ad.Phone_Number }}{% elif ad.Identifier == "BUSINESS" %}<strong>Address:</strong>{{ ad.Address }}{% endif %}</p>
+            {% for meta in ad.meta %} <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px"><strong>{{meta.key}}:</strong> {{meta.value}}<p> {% endfor %}
+            <p style="border-bottom: solid blue 2px; max-width: 30%; padding-top: 15px; padding-bottom: 10px; word-wrap: break-word"><strong>Information:</strong>{{ ad.INFO }}</p>
+            <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px"><strong>City:</strong> {{ad.Province_Name}}, {{ ad.City_Name }}</p>
+        </div>
+        <div class="ad-photos">
+            <div style="width: 380px; height: 350px">
+                <img src="{% static ad.img_of_ad.0.IMG_Link|default:'img/no_images.png' %}" alt="Your Image" class="img-fluid">
+                <p style="text-align: center;font-size: 10px">Views: {{ ad.Views }}</p> 
+            </div> 
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block custom_tags %}
+    <link rel="stylesheet" href="{% static 'about_us/about_us.css' %}">
+{% endblock %} 
+
+{% block content %}
+    <div class= "about-container">
+        <div class= "left-content">
+            <img src="{% static 'img/ermia.png' %}" alt="Your Image" class="img-fluid">
+        </div>
+        <div class= "mid-content">
+            <p>zhskfnjdkfn HSdljfnzlsdnf jlzndfnz jdn jznd jzldnflkzndspofz nlkdnfl zf</p>
+        </div>
+        <div class="right-content">
+            <img src="{% static 'img/ermia.png' %}" alt="Your Image" class="img-fluid">
+        </div>    
+    </div>
+{% endblock %}

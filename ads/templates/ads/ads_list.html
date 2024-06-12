@@ -7,16 +7,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="main-container">
-    <section class="ad-section">
-        {% for ad in ads %}
+<section class="ad-section">
+    {% for ad in ads %}
+    <a class="main-container" href="{% url 'ad_detail' ad.Title ad.Ad_ID  %}">
         <div class="ad-card p-3 m-2">
-            <img src="{% static ad.IMG_Link  %}" alt="Your Image" class="img-fluid">
+            <img src="{% static ad.IMG_Link|default:'img/no_images.png' %}" alt="Your Image" class="img-fluid">
             <div class="ad-content p-2">
-                <h1 class="text-center">{{ ad.Title }}</h1>
+                <h3 class="text-left">{{ ad.Title }}</h3>
+                <p class="text-left">{{ ad.INFO |truncatechars:20 }}<p>
             </div>
         </div>
-        {% endfor %}
-    </section>
-</div>
+    </a>
+    {% endfor %}
+</section>
 {% endblock %}
