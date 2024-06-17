@@ -27,10 +27,11 @@ class LoginView(View):
             else:
                 return render(request, 'accounts/login.html', {'error': 'Email not found'})
 
-from django.db import connection
 
 class VerifyCodeView(View):
     def get(self, request):
+        if 'email' not in request.session:
+            return redirect('login')
         return render(request, 'accounts/verify_code.html')
 
     def post(self, request):
@@ -72,11 +73,13 @@ class VerifyCodeView(View):
                 return render(request, 'accounts/verify_code.html', {'error': 'Invalid code'})
         else:
             return render(request, 'accounts/verify_code.html', {'error': 'Code has expired'})
+        
 def logout_view(request):
     request.session.pop('user_id', None)
     request.session.pop('first_name', None)
     request.session.pop('last_name', None)
     request.session.pop('image', None)
+    request.session.pop('email', None)
     return redirect('ads_list')
 
 
