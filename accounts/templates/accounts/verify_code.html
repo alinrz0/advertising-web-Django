@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Verify Code</title>
+{% endblock %}
+
+{% block custom_tags %}
+    {% comment %} <link rel="stylesheet" href="{% static 'ads/ad_detail.css' %}"> {% endcomment %}
+{% endblock %}
+
+{% block content %}
+    <div class="container py-5 mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="card-title">Verify Code</h2>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="code" class="form-label fs-5">Enter Verification Code:</label>
+                                <input type="text" id="code" name="code" class="form-control form-control-lg">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg">Verify</button>
+                            {% if error %}
+                                <p class="text-danger mt-3 fs-5">{{ error }}</p>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

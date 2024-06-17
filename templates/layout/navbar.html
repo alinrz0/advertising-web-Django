@@ -1,15 +1,11 @@
 <!-- Navbar-->
 {% load static %}
-<<<<<<< HEAD
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="z-index: 1; position: fixed; top: 0; width: 100%">
-=======
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" >
->>>>>>> 25138200c661c10e0f2ad703afa3b5e2c53041a1
     <div class="container-fluid justify-content-between">
       <!-- Left elements -->
       <div class="d-flex">
         <!-- Brand -->
-        <a class="navbar-brand me-3 mb-1 d-flex align-items-center" href="#">
+        <a class="navbar-brand me-3 mb-1 d-flex align-items-center" href="{% url 'about_us' %}">
           <img
             src="{% static 'img/logo.png' %}"
             height="33"
@@ -80,18 +76,26 @@
 
   <!-- Right elements -->
   <ul class="navbar-nav flex-row">
-    <li class="nav-item me-3 me-lg-1">
-      <a class="nav-link d-sm-flex align-items-sm-center" href="#" style="font-size: 1.3rem; padding: 0.5rem 1rem;">
-        <img
-          src="https://mdbcdn.b-cdn.net/img/new/avatars/1.webp"
-          class="rounded-circle"
-          height="30"
-          alt="Black and White Portrait of a Man"
-          loading="lazy"
-        />
-        <strong class="d-none d-sm-block ms-2" style="font-size: 1.3rem;">John</strong>
-      </a>
-    </li>
+    {% if request.session.user_id %}
+      <li class="nav-item me-3 me-lg-1">
+        <a class="nav-link d-sm-flex align-items-sm-center" href="#" style="font-size: 1.3rem; padding: 0.5rem 1rem;">
+          <img
+            src="{% static request.session.image|default:'img/no_images.png' %}"
+            class="rounded-circle"
+            height="30"
+            alt="Black and White Portrait of a Man"
+            loading="lazy"
+          />
+          <strong class="d-none d-sm-block ms-2" style="font-size: 1.3rem;">{{ request.session.first_name}} {{ request.session.last_name }}</strong>
+        </a>
+      </li>
+    {% else %}
+  <li class="nav-item me-3 me-lg-1">
+    <a class="nav-link" href="{% url 'login' %}" style="font-size: 1.3rem; padding: 0.5rem 1rem;">
+      <strong class="d-none d-sm-block ms-2" style="font-size: 1.3rem;">Login</strong>
+    </a>
+  </li>
+{% endif %}
 
 
     <div class="dropdown ms-2">
@@ -113,9 +117,8 @@
       </button>
       <div class="dropdown-menu dropdown-menu-fullpage" aria-labelledby="dropdownMenuLink" style="position: fixed; top: 0; right: 0; width: 15%; height: 100vh; background-color: #343a40; border: none; padding: 20px; overflow-y: auto;">
         <!-- your dropdown menu content here -->
-        <a class="dropdown-item" href="#" style="color: #ffffff;">Action</a>
-        <a class="dropdown-item" href="#" style="color: #ffffff;">Another action</a>
-        <a class="dropdown-item" href="#" style="color: #ffffff;">Something else here</a>
+        <a class="dropdown-item" href="{% url 'about_us' %}" style="color: #ffffff;">About Us</a>
+        <a class="dropdown-item" href="{% url 'logout' %}" style="color: #ffffff;">Log Out</a>
         <!-- Add more items here -->
       </div>
     </div>
