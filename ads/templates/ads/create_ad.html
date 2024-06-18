@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Create Ad
+{% endblock %}
+
+{%block custom_tags%}
+    <link rel="stylesheet" href="{% static 'ads/create_ad.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="custome-container">
+        <div class="ad-form">
+            <h1 class="text-center">Create Ad</h1><hr style="border-bottom:  black">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" id="title" name="title" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="number" id="price" name="price" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="city_id">City:</label>
+                    <select id="city_id" name="city_id" class="form-control">
+                        {% for city in cities %}
+                            <option value="{{ city.0 }}">{{ city.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category_id">Category:</label>
+                    <select id="category_id" name="category_id" class="form-control">
+                        {% for category in categories %}
+                            <option value="{{ category.0 }}">{{ category.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="images">Images:</label>
+                    <input type="file" id="images" name="images"  accept="image/*" class="form-control" multiple />
+                  </div>
+                
+                  <div class="form-group">
+                    <label for="meta">Meta:</label>
+                    <div id="meta-container">
+                        <div class="meta-input">
+                            <input type="text" name="meta[]" class="form-control" placeholder="Key">
+                            <input type="text" name="meta[]" class="form-control" placeholder="Value">
+                        </div>
+                    </div>
+                    <button type="button" id="add-meta-btn">Add More</button>
+                </div>
+                
+                <script>
+                    $(document).ready(function() {
+                        $('#add-meta-btn').click(function() {
+                            $('#meta-container').append(`
+                                <div class="meta-input">
+                                    <input type="text" name="meta[]" class="form-control" placeholder="Key">
+                                    <input type="text" name="meta[]" class="form-control" placeholder="Value">
+                                </div>
+                            `);
+                        });
+                    });
+                </script>
+                <button type="submit" class="btn btn-primary">Create Ad</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,101 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.custome-container {
+    height: 100vh;
+    margin: 0;
+    /* background-color: #f5f5f5; */
+}
+
+.ad-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.ad-form label {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.ad-form input,
+.ad-form textarea,
+.ad-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.ad-form button[type="submit"] {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.ad-form button[type="submit"]:hover {
+    background-color: #3e8e41;
+}
+
+.ad-form.form-group {
+    margin-bottom: 20px;
+}
+
+.ad-form.form-group label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.ad-form.form-group input,
+.ad-form.form-group textarea,
+.ad-form.form-group select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+
+/* Styles for meta part */
+
+.meta-input {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.meta-input input[type="text"] {
+    width: 45%;
+    margin-right: 10px;
+}
+
+.meta-input input[type="text"]:first-child {
+    margin-right: 10px;
+}
+
+#add-meta-btn {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+#add-meta-btn:hover {
+    background-color: #3e8e41;
+}

@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect
-from django.views.generic import TemplateView,DetailView
+from django.views.generic import TemplateView,DetailView,CreateView
 from django.db import connections
-
-
+import datetime
+from django.core.files.storage import FileSystemStorage
 from django.template.response import TemplateResponse
 from django.db import connections,connection
 
@@ -77,3 +77,75 @@ class AdDetailView(DetailView):
 
 def empty_url(request):
     return redirect("ads_list")
+
+
+class CreateAdView(CreateView):
+    template_name = 'ads/create_ad.html'
+    success_url = '/ads'  # redirect to ad list after creation
+
+    def get(self, request, *args, **kwargs):
+        if 'user_id' in request.session:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM city")
+                cities = cursor.fetchall()
+                cursor.execute("SELECT * FROM ad_category")
+                categories = cursor.fetchall()
+            return render(request, self.template_name, {'cities':cities,'categories':categories})
+        else:
+            return redirect('/accounts/login')
+    
+    def post(self, request, *args, **kwargs):
+        identifier=request.GET.get('identifier','USER')
+        with connection.cursor() as cursor:
+            # Insert ad data
+            cursor.execute("""
+                INSERT INTO ads (Title, INFO, Price, City_ID, Category_ID, Identifier)
+                VALUES (%s, %s, %s, %s, %s, %s
+                )
+            """, [
+                request.POST['title'],
+                request.POST['description'],
+                request.POST['price'],
+                request.POST['city_id'],
+                request.POST['category_id'],
+                identifier
+            ])
+            cursor.execute("SELECT LAST_INSERT_ID()")
+            ad_id = cursor.fetchone()[0]
+
+            # Insert user or business data
+            if identifier == 'USER':
+                cursor.execute("""
+                    INSERT INTO ads_of_users (Ad_ID, User_ID)
+                    VALUES (%s, %s)
+                """, [ad_id, request.session['user_id']])
+                
+            # elif request.POST['identifier'] == 'BUSINESS':
+            #     cursor.execute("""
+            #         INSERT INTO ads_of_business (Ad_ID, Business_ID)
+            #         VALUES (%s, %s)
+            #     """, [ad_id, request.POST['business_id']])
+                
+                
+            # # Insert img_of_ad data
+            fs = FileSystemStorage(location='static/img', base_url='/static/img/')
+            for img in request.FILES.getlist('images'):
+                filename = fs.save(img.name, img)
+                uploaded_file_url = fs.url(filename).replace('/static/img/', 'img/')
+                
+                cursor.execute("""
+                    INSERT INTO img_of_ad (Ad_ID, IMG_Link)
+                    VALUES (%s, %s)
+                """, [ad_id, uploaded_file_url])
+
+            # # Insert meta data
+            for i in range(0, len(request.POST.getlist('meta[]')), 2):
+                meta_key = request.POST.getlist('meta[]')[i]
+                meta_value = request.POST.getlist('meta[]')[i+1]
+                cursor.execute("""
+                    INSERT INTO meta (Ad_ID, `key`, value)
+                    VALUES (%s, %s, %s)
+                """, [ad_id, meta_key, meta_value])
+
+
+        return redirect(self.success_url)
