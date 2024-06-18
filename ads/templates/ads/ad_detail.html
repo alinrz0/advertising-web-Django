@@ -2,11 +2,13 @@
 {% load static %}
 
 {% block title %}
-    <title>{{ ad.title }}</title>
+    {{ ad.title }}
 {% endblock %}
 
 {%block custom_tags%}
     <link rel="stylesheet" href="{% static 'ads/ad_detail.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -22,10 +24,29 @@
             <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px"><strong>City:</strong> {{ad.Province_Name}}, {{ ad.City_Name }}</p>
         </div>
         <div class="ad-photos">
-            <div style="width: 380px; height: 350px">
-                <img src="{% static ad.img_of_ad.0.IMG_Link|default:'img/no_images.png' %}" alt="Your Image" class="img-fluid">
-                <p style="text-align: center;font-size: 10px">Views: {{ ad.Views }}</p> 
-            </div> 
-        </div>
+            <div id="carouselExample" class="carousel slide" data-ride="carousel">
+              <ol class="carousel-indicators">
+                {% for img in ad.img_of_ad %}
+                  <li data-target="#carouselExample" data-slide-to="{{ forloop.counter0 }}"></li>
+                {% endfor %}
+              </ol>
+              <div class="carousel-inner">
+                {% for img in ad.img_of_ad %}
+                  <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{% static img.IMG_Link|default:'img/no_images.png' %}" alt="Your Image" class="img-fluid">
+                  </div>
+                {% endfor %}
+              </div>
+              <a class="carousel-control-prev custom-prev" href="#carouselExample" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next custom-next" href="#carouselExample" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+            <p style="text-align: center;font-size: 10px">Views: {{ ad.Views }}</p>
+          </div>
     </div>
 {% endblock %}
