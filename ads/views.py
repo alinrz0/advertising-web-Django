@@ -41,8 +41,13 @@ class AdDetailView(DetailView):
     template_name = 'ads/ad_detail.html'
     context_object_name = 'ad'
 
+    def increment_view_count(self, ad_id):
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE ads SET Views = Views + 1 WHERE Ad_ID = %s", [ad_id])
+                
     def get_object(self):
         pk = self.kwargs['pk']
+        self.increment_view_count(pk)
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM ads WHERE Ad_ID = %s ", [pk])
             result = cursor.fetchone()
