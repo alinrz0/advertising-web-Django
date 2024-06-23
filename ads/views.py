@@ -4,7 +4,8 @@ import datetime
 from django.core.files.storage import FileSystemStorage
 from django.template.response import TemplateResponse
 from django.db import connections,connection
-
+from django.http import JsonResponse
+from django.urls import reverse
 
 class AdListView(TemplateView):
     template_name = 'ads/ads_list.html'
@@ -47,6 +48,7 @@ class AdDetailView(DetailView):
     def get_object(self):
         pk = self.kwargs['pk']
         self.increment_view_count(pk)
+        
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM ads WHERE Ad_ID = %s ", [pk])
             result = cursor.fetchone()
@@ -77,8 +79,31 @@ class AdDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM report_kind")
+            report_kinds = [dict(zip([col[0] for col in cursor.description], row)) for row in cursor.fetchall()]
+        context['report_kinds'] = report_kinds
         return context
-
+    
+    
+    def post(self, request, *args, **kwargs):
+        report_note = request.POST.get('report_note')
+        report_kind = request.POST.get('report_kind')
+        user_id=request.session.get('user_id')
+        with connection.cursor() as cursor:
+            # Insert ad data
+            cursor.execute("""
+                INSERT INTO ad_reports (Note_Report, Report_Kind_ID, Reporter_ID, Ad_ID)
+                VALUES (%s, %s, %s, %s
+                )
+            """, [
+                report_note,
+                report_kind,
+                user_id,
+                self.kwargs['pk']
+            ])
+        return redirect(reverse('ad_detail', args=(self.kwargs['slug'],self.kwargs['pk'])))
+    
 def empty_url(request):
     return redirect("ads_list")
 
@@ -153,3 +178,5 @@ class CreateAdView(CreateView):
 
 
         return redirect(self.success_url)
+    
+    

@@ -9,19 +9,21 @@
     <link rel="stylesheet" href="{% static 'ads/ad_detail.css' %}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="{% static 'ads/ad_detail.js' %}"></script>
+
 {% endblock %}
 
 {% block content %}
     <div class="custome-container">
         <div class="ad-details">
             <h1 class="text-center">{{ ad.Title }}</h1><hr style="border-bottom:  black">
-            <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px">{% if ad.Identifier == "USER" %}<strong>Name:</strong>{{ ad.First_Name }} {{ ad.Last_Name }}{% elif ad.Identifier == "BUSINESS" %}<strong>Business Name:</strong>{{ ad.Business_Name }}{% endif %}</p>
-            <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px"><strong>Category:</strong> {{ ad.Category_Name }}</p>
-            <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px"><strong>Price:</strong>  {{ ad.Price }}</p>
-            <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px">{% if ad.Identifier == "USER" %}<strong>Phone:</strong>{{ ad.Phone_Number }}{% elif ad.Identifier == "BUSINESS" %}<strong>Address:</strong>{{ ad.Address }}{% endif %}</p>
-            {% for meta in ad.meta %} <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px"><strong>{{meta.key}}:</strong> {{meta.value}}<p> {% endfor %}
-            <p style="border-bottom: solid blue 2px; max-width: 30%; padding-top: 15px; padding-bottom: 10px; word-wrap: break-word"><strong>Information:</strong>{{ ad.INFO }}</p>
-            <p style="border-bottom: solid blue 2px; width: 30%; padding-top: 15px; padding-bottom: 10px"><strong>City:</strong> {{ad.Province_Name}}, {{ ad.City_Name }}</p>
+            <p style="">{% if ad.Identifier == "USER" %}<strong>Name:</strong>{{ ad.First_Name }} {{ ad.Last_Name }}{% elif ad.Identifier == "BUSINESS" %}<strong>Business Name:</strong>{{ ad.Business_Name }}{% endif %}</p>
+            <p ><strong>Category:</strong> {{ ad.Category_Name }}</p>
+            <p ><strong>Price:</strong>  {{ ad.Price }}</p>
+            <p >{% if ad.Identifier == "USER" %}<strong>Phone:</strong>{{ ad.Phone_Number }}{% elif ad.Identifier == "BUSINESS" %}<strong>Address:</strong>{{ ad.Address }}{% endif %}</p>
+            {% for meta in ad.meta %} <p ><strong>{{meta.key}}:</strong> {{meta.value}}<p> {% endfor %}
+            <p ><strong>Information:</strong>{{ ad.INFO }}</p>
+            <p ><strong>City:</strong> {{ad.Province_Name}}, {{ ad.City_Name }}</p>
         </div>
         <div class="ad-photos">
             <div id="carouselExample" class="carousel slide" data-ride="carousel">
@@ -48,5 +50,42 @@
             </div>
             <p style="text-align: center;font-size: 10px">Views: {{ ad.Views }}</p>
           </div>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#reportModal">Report Ad</button>
+
+        <!-- Report Modal -->
+        <div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="reportModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="reportModalLabel">Report Ad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form method="post" enctype="multipart/form-data" onsubmit="submitReport()">
+                  {% csrf_token %}
+                  <div class="form-group">
+                    <label for="report_kind">Report Kind:</label>
+                    <select id="report_kind" name="report_kind" class="form-control">
+                      {% for report_kind in report_kinds %}
+                        <option value="{{ report_kind.Report_Kind_ID }}">{{ report_kind.Report_Kind_Name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="report_note">Report Note:</label>
+                    <textarea id="report_note" name="report_note" class="form-control" required pattern=".{1,}"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="submit-report">Submit Report</button>
+                  </div>
+                </form>
+              </div>
+              
+            </div>
+          </div>
+        </div>
     </div>
 {% endblock %}

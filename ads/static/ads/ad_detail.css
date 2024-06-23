@@ -1,3 +1,73 @@
+/* ad_detail.css */
+
+.custome-container {
+    /* add styles for the container here */
+}
+
+.ad-details {
+    /* add styles for the ad details section here */
+}
+
+.ad-details h1 {
+    /* add styles for the ad title here */
+}
+
+.ad-details p {
+    /* add styles for the ad details paragraphs here */
+    border-bottom: solid blue 2px;
+    width: 30%;
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+.ad-photos {
+    /* add styles for the ad photos section here */
+}
+
+.carousel-inner {
+    /* add styles for the carousel inner container here */
+}
+
+.carousel-item {
+    /* add styles for the carousel item here */
+}
+
+.carousel-item img {
+    /* add styles for the carousel item image here */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.custom-prev,
+.custom-next {
+    /* add styles for the carousel navigation buttons here */
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.custom-prev:hover,
+.custom-next:hover {
+    /* add styles for the carousel navigation buttons on hover here */
+    background-color: #ccc;
+}
+
+.sr-only {
+    /* add styles for the screen reader only text here */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 .ad-photos {
     position: absolute;
     top: 250px;
