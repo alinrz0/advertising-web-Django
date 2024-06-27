@@ -117,6 +117,7 @@
       </button>
       <div class="dropdown-menu dropdown-menu-fullpage" aria-labelledby="dropdownMenuLink" style="position: fixed; top: 0; right: 0; width: 15%; height: 100vh; background-color: #343a40; border: none; padding: 20px; overflow-y: auto;">
         <!-- your dropdown menu content here -->
+        <a class="dropdown-item" href="{% url 'ads_list' %}?identifier=USER" style="color: #ffffff;">Main Page</a>
         <a class="dropdown-item" href="{% url 'create_ad' %}?identifier=USER" style="color: #ffffff;">Create Ad</a>
         <a class="dropdown-item" href="{% url 'create_business' %}?identifier=USER" style="color: #ffffff;">Create Business</a>
         <a class="dropdown-item" href="{% url 'about_us' %}" style="color: #ffffff;">About Us</a>
