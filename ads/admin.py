@@ -27,14 +27,32 @@ admin.site.register(models.ReportKind,ReportKindAdmin)
 
 class AdStatusInline(admin.TabularInline):
     model = models.AdStatus
-    fields = ('note', 'suporter')
+    fields = ('note', 'status')
     extra=1
+    can_delete=False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+    
+class AdsOfUserInline(admin.TabularInline):
+    model = models.AdsOfUsers
+    fields = ('user',)
+    readonly_fields=('user',)
+    extra=1
+    can_delete=False
+    
+class AdsOfBusinessInline(admin.TabularInline):
+    model = models.AdsOfBusiness
+    fields = ('business',)
+    readonly_fields=('business',)
+    extra=1
+    can_delete=False
     
 class AdsAdmin(admin.ModelAdmin):
-    readonly_fields = ('title', 'info', 'add_time', 'price', 'city_id', 'category', 'views', 'identifier')
-    fields = ('ad_status',) + readonly_fields
+    readonly_fields = ('ad_status','title', 'info', 'add_time', 'price', 'city_id', 'category', 'views', 'identifier')
+    fields = readonly_fields
     list_display = ["title"]
-    inlines = [AdStatusInline]
+    inlines = [AdStatusInline,AdsOfUserInline,AdsOfBusinessInline]
     def has_add_permission(self, request):
         return False
     
@@ -43,9 +61,10 @@ class AdsAdmin(admin.ModelAdmin):
         for instance in instances:
             instance.ad = form.instance
             instance.suporter = request.user
-            instance.status = form.instance.ad_status
             instance.edit_time=datetime.now()
             instance.save()
+            form.instance.ad_status = instance.status
+            form.instance.save()
         formset.save_m2m()
         
 

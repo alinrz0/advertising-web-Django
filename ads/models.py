@@ -59,7 +59,7 @@ class AdStatus(models.Model):
     ad = models.ForeignKey('Ads', models.DO_NOTHING, db_column='Ad_ID')  # Field name made lowercase.
     edit_time = models.DateTimeField(db_column='Edit_Time', blank=True, null=True)  # Field name made lowercase.
     suporter = models.ForeignKey(settings.AUTH_USER_MODEL, models.DO_NOTHING, db_column='Suporter_ID')  # Field name made lowercase.
-    status = models.CharField(db_column='Status', max_length=10, blank=True, null=True)  # Field name made lowercase.
+    status = models.CharField(db_column='Status', max_length=10, blank=False, null=False ,choices=[("ACCEPTED", "ACCEPTED"),("UNACCEPTED", "UNACCEPTED")])  # Field name made lowercase.
     note = models.CharField(db_column='Note', max_length=1000, blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
