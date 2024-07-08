@@ -6,6 +6,7 @@ from django.template.response import TemplateResponse
 from django.db import connections,connection
 from django.http import JsonResponse
 from django.urls import reverse
+from django.core.cache import cache
 class AdListView(TemplateView):
     template_name = 'ads/ads_list.html'
 
@@ -77,6 +78,11 @@ class AdDetailView(DetailView):
         pk = self.kwargs['pk']
         self.increment_view_count(pk)
         
+        cached_ad_data = cache.get(f'ad_data:{pk}')
+        if cached_ad_data:
+            print("read from cache")
+            return cached_ad_data
+        
         with connection.cursor() as cursor:
             cursor.execute("SELECT * FROM ads WHERE Ad_ID = %s ", [pk])
             result = cursor.fetchone()
@@ -105,6 +111,10 @@ class AdDetailView(DetailView):
                 cursor.execute("SELECT * FROM ad_status WHERE Ad_ID = %s ORDER BY Edit_time DESC", [pk])
                 ad_status_results = cursor.fetchall()
                 ad_data['ad_status'] = [dict(zip([col[0] for col in cursor.description], row)) for row in ad_status_results]
+                
+                # Cache the ad data in Redis for 1 hour
+                cache.set(f'ad_data:{pk}', ad_data, 3600)
+                
                 return ad_data
             else:
                 return {}  # or return a default ad object
