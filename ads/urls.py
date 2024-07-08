@@ -5,4 +5,5 @@ urlpatterns = [
      path('ads/<slug>/<pk>/', views.AdDetailView.as_view(), name='ad_detail'),
      path('' , views.empty_url),
      path('ads/create_ad/', views.CreateAdView.as_view(), name='create_ad'),
+     path('ads/your_ads/', views.YourAdView.as_view(), name='your_ads'),
 ]

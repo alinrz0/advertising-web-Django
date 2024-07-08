@@ -7,6 +7,7 @@ import datetime
 from django.views.generic.edit import FormView
 from django.urls import reverse_lazy
 from .forms import SignUpForm
+from django.core.cache import cache
 
 class LoginView(View):
     def get(self, request):
@@ -18,11 +19,9 @@ class LoginView(View):
             cursor.execute("SELECT * FROM users WHERE Email = %s", (email,))
             user = cursor.fetchone()
             if user:
-                code = str(random.randint(100000, 999999))
-                print(code)
+                cache.set(f'verification_code:{email}', str(random.randint(100000, 999999)), 120)
+                print(cache.get(f'verification_code:{email}'))
                 request.session['email'] = email
-                request.session['code'] = code
-                request.session['code_timestamp'] = datetime.datetime.now().timestamp()
                 return redirect('verify_code')
             else:
                 return render(request, 'accounts/login.html', {'error': 'Email not found'})
@@ -36,16 +35,11 @@ class VerifyCodeView(View):
 
     def post(self, request):
         code = request.POST.get('code')
-        if 'code' in request.session:
-            code_timestamp = request.session['code_timestamp']
-            if datetime.datetime.now().timestamp() - code_timestamp > 120:
-                del request.session['code']
-                del request.session['code_timestamp']
-                return render(request, 'accounts/verify_code.html', {'error': 'Code has expired'})
-            elif code == request.session.get('code'):
-                del request.session['code']
-                del request.session['code_timestamp']
-                email = request.session['email']
+        email = request.session['email']
+        stored_code = cache.get(f'verification_code:{email}')
+        if stored_code:
+            if code == stored_code:
+                cache.delete(f'verification_code:{email}')  
                 with connection.cursor() as cursor:
                     cursor.execute("SELECT * FROM users WHERE Email = %s", [email])
                     row = cursor.fetchone()
@@ -113,10 +107,8 @@ class SignUpView(FormView):
             self.request.session['phone_number']=phone_number
             self.request.session['city_id']=city_id
             self.request.session['email'] = email
-            code = str(random.randint(100000, 999999))
-            print(code)
-            self.request.session['code'] = code
-            self.request.session['code_timestamp'] = datetime.datetime.now().timestamp()
+            cache.set(f'verification_code:{email}', str(random.randint(100000, 999999)), 120)
+            print(cache.get(f'verification_code:{email}'))
             
             
         

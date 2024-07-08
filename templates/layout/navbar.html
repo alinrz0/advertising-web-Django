@@ -120,6 +120,9 @@
         <a class="dropdown-item" href="{% url 'ads_list' %}?identifier=USER" style="color: #ffffff;">Main Page</a>
         <a class="dropdown-item" href="{% url 'create_ad' %}?identifier=USER" style="color: #ffffff;">Create Ad</a>
         <a class="dropdown-item" href="{% url 'create_business' %}?identifier=USER" style="color: #ffffff;">Create Business</a>
+        {% if request.session.user_id %}
+        <a class="dropdown-item" href="{% url 'your_ads' %}" style="color: #ffffff;">Your Ads</a>
+        {% endif %}
         <a class="dropdown-item" href="{% url 'about_us' %}" style="color: #ffffff;">About Us</a>
         {% if request.session.user_id %}
         <a class="dropdown-item" href="{% url 'logout' %}" style="color: #ffffff;">Log Out</a>

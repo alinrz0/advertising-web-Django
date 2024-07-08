@@ -24,6 +24,9 @@
             {% for meta in ad.meta %} <p ><strong>{{meta.key}}:</strong> {{meta.value}}<p> {% endfor %}
             <p ><strong>Information:</strong>{{ ad.INFO }}</p>
             <p ><strong>City:</strong> {{ad.Province_Name}}, {{ ad.City_Name }}</p>
+            {% if request.META.HTTP_REFERER == 'http://localhost:8000/ads/your_ads/' %}
+            {% for status in ad.ad_status %}<p ><strong>{{status.Status}} in {{status.Edit_Time}} <br>note: </strong> {{status.Note}} <p> {% endfor %}
+            {% endif %}
         </div>
         <div class="ad-photos">
             <div id="carouselExample" class="carousel slide" data-ride="carousel">
@@ -88,4 +91,8 @@
           </div>
         </div>
     </div>
+
+
+
+
 {% endblock %}
