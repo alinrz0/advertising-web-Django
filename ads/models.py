@@ -38,6 +38,9 @@ class Ads(models.Model):
     class Meta:
         managed = False
         db_table = 'ads'
+        
+    def __str__(self) :
+        return self.title
 
 
 
@@ -134,7 +137,7 @@ class ReportKind(models.Model):
         
 class Users(models.Model):
     user_id = models.AutoField(db_column='User_ID', primary_key=True)  # Field name made lowercase.
-    user_status = models.CharField(db_column='User_Status', max_length=8)  # Field name made lowercase.
+    user_status = models.CharField(db_column='User_Status', max_length=8,choices=[("ACTIVE","ACTIVE"),("DEACTIVE","DEACTIVE")])  # Field name made lowercase.
     first_name = models.CharField(db_column='First_Name', max_length=55)  # Field name made lowercase.
     last_name = models.CharField(db_column='Last_Name', max_length=55)  # Field name made lowercase.
     phone_number = models.CharField(db_column='Phone_Number', unique=True, max_length=55)  # Field name made lowercase.

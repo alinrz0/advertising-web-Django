@@ -21,7 +21,7 @@ class AdListView(TemplateView):
                     GROUP BY Ad_ID 
                 ) i_sub ON a.Ad_ID = i_sub.Ad_ID 
                 LEFT JOIN img_of_ad i ON i_sub.Ad_ID = i.Ad_ID AND i_sub.min_img_id = i.img_id 
-                WHERE a.AD_STATUS='ACCEPTED'
+                WHERE a.AD_STATUS='ACCEPTED' AND a.Deleted_at IS NULL
                 ORDER BY a.Add_Time DESC;
             """
             cursor.execute(query)
