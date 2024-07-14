@@ -15,23 +15,25 @@
           />
         </a>
         <!-- Search form -->
-        <form class="input-group w-auto my-auto d-sm-flex">
+        <form id="search-form" class="input-group w-auto my-auto d-sm-flex" method="post" action="{% url 'search'  %}">
+          {% csrf_token %}
           <input
             autocomplete="off"
             type="search"
             class="form-control rounded"
             placeholder="Search"
             style="min-width: 300px;"
+            name="slug"
           />
           <button
             data-mdb-ripple-init
             class="btn btn-outline-primary"
-            type="button"
+            type="submit"
             data-mdb-ripple-color="dark"
           >
             Search
           </button>
-        
+          
           <div class="dropdown ms-2">
             <button
               class="btn btn-outline-primary dropdown-toggle"
@@ -44,9 +46,10 @@
               City 
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
+                {% for city in cities %}
+                  <a class="dropdown-item" href="#" value="{{ city.City_ID }}">{{ city.City_Name }}</a>
+                  <input type="hidden" name="city" value="{{ city.City_ID }}">
+                {% endfor %}
               <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
               <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
             </div>
@@ -64,12 +67,15 @@
               Category 
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
+              {% for category in category %}
+                <a class="dropdown-item" href="#" value="{{ category.Ad_Category_ID }}">{{ category.Category_Name }}</a>
+                <input type="hidden" name="category" value="{{ category.Ad_Category_ID }}">
+              {% endfor %}
             </div>
           </div>
         </form>
+        
+        
   </div>
   <!-- Left elements -->
 
@@ -118,7 +124,7 @@
       <div class="dropdown-menu dropdown-menu-fullpage" aria-labelledby="dropdownMenuLink" style="position: fixed; top: 0; right: 0; width: 15%; height: 100vh; background-color: #343a40; border: none; padding: 20px; overflow-y: auto;">
         <!-- your dropdown menu content here -->
         <a class="dropdown-item" href="{% url 'ads_list' %}?identifier=USER" style="color: #ffffff;">Main Page</a>
-        <a class="dropdown-item" href="{% url 'create_ad' %}?identifier=USER" style="color: #ffffff;">Create Ad</a>
+        <a class="dropdown-item" href="{% url 'create_ad' %}?identifier={{identifier}}" style="color: #ffffff;">Create Ad</a>
         <a class="dropdown-item" href="{% url 'create_business' %}?identifier=USER" style="color: #ffffff;">Create Business</a>
         {% if request.session.user_id %}
         <a class="dropdown-item" href="{% url 'your_ads' %}" style="color: #ffffff;">Your Ads</a>

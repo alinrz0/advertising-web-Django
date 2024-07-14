@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'ads',
     'accounts',
     'business',
+    'search',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

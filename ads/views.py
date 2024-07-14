@@ -26,7 +26,18 @@ class AdListView(TemplateView):
             """
             cursor.execute(query)
             rows = self.dictfetchall(cursor)
-        return TemplateResponse(request, self.template_name, {'ads': rows})
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM city")
+                cities = self.dictfetchall(cursor)
+                
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT * FROM ad_category")
+                category = self.dictfetchall(cursor)
+            
+            
+        return TemplateResponse(request, self.template_name, {'ads': rows,'cities':cities,'category':category})
+
+
 
     def dictfetchall(self, cursor):
         columns = [col[0] for col in cursor.description]
@@ -166,7 +177,14 @@ class CreateAdView(CreateView):
             return redirect('/accounts/login')
     
     def post(self, request, *args, **kwargs):
-        identifier=request.GET.get('identifier','USER')
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT Business_ID FROM business WHERE User_ID=%s ",[request.session['user_id']])
+            business = cursor.fetchone()
+            
+        if business:
+            request.session['identifier']='BUSINESS'
+        else:
+            request.session['identifier']='USER'
         with connection.cursor() as cursor:
             # Insert ad data
             cursor.execute("""
@@ -179,23 +197,23 @@ class CreateAdView(CreateView):
                 request.POST['price'],
                 request.POST['city_id'],
                 request.POST['category_id'],
-                identifier
+                request.session['identifier']
             ])
             cursor.execute("SELECT LAST_INSERT_ID()")
             ad_id = cursor.fetchone()[0]
 
             # Insert user or business data
-            if identifier == 'USER':
+            if request.session['identifier'] == 'USER':
                 cursor.execute("""
                     INSERT INTO ads_of_users (Ad_ID, User_ID)
                     VALUES (%s, %s)
                 """, [ad_id, request.session['user_id']])
                 
-            # elif request.POST['identifier'] == 'BUSINESS':
-            #     cursor.execute("""
-            #         INSERT INTO ads_of_business (Ad_ID, Business_ID)
-            #         VALUES (%s, %s)
-            #     """, [ad_id, request.POST['business_id']])
+            elif request.session['identifier'] == 'BUSINESS':
+                cursor.execute("""
+                    INSERT INTO ads_of_business (Ad_ID, Business_ID)
+                    VALUES (%s, %s)
+                """, [ad_id, business])
                 
                 
             # # Insert img_of_ad data
