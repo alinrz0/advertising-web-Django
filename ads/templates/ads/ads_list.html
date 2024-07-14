@@ -15,6 +15,7 @@
             <div class="ad-content p-2">
                 <h3 class="text-left">{{ ad.Title }}</h3>
                 <p class="text-left">{{ ad.INFO |truncatechars:20 }}<p>
+                    <p class="text-left">{{ ad.Add_Time}}<p>
                 {% if request.get_full_path == '/ads/your_ads/' %}
                     <p>{{ad.Ad_STATUS}}</p>
                 {% endif %}

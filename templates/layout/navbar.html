@@ -78,7 +78,7 @@
   <ul class="navbar-nav flex-row">
     {% if request.session.user_id %}
       <li class="nav-item me-3 me-lg-1">
-        <a class="nav-link d-sm-flex align-items-sm-center" href="#" style="font-size: 1.3rem; padding: 0.5rem 1rem;">
+        <a class="nav-link d-sm-flex align-items-sm-center" href="{% url 'profile' %}" style="font-size: 1.3rem; padding: 0.5rem 1rem;">
           <img
             src="{% static request.session.image|default:'img/no_images.png' %}"
             class="rounded-circle"

@@ -117,3 +117,43 @@ class SignUpView(FormView):
     def form_invalid(self, form):
         # If form is invalid, render the form with errors
         return render(self.request, self.template_name, {'form': form})
+    
+class ProfileView(View):
+    template_name = 'accounts/profile.html'
+
+    def get(self, request):
+        if 'user_id' not in request.session:
+            return redirect('login')
+        user_id = request.session['user_id']
+
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM users WHERE User_ID = %s", [user_id])
+            profile_data = cursor.fetchone()
+
+        return render(request, self.template_name, {'profile_data': profile_data})
+
+    def post(self, request):
+        if 'user_id' not in request.session:
+            return redirect('login')
+        user_id = request.session['user_id']
+
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        phone_number = request.POST.get('phone_number')
+
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM users WHERE Email = %s AND User_ID!= %s", [email, user_id])
+            email_exists = cursor.fetchone()
+            cursor.execute("SELECT * FROM users WHERE Phone_Number = %s AND User_ID!= %s", [phone_number, user_id])
+            phone_number_exists = cursor.fetchone()
+
+        if email_exists:
+            return render(request, self.template_name, {'profile_data': None, 'error': 'Email is already in use'})
+        elif phone_number_exists:
+            return render(request, self.template_name, {'profile_data': None, 'error': 'Phone number is already in use'})
+        else:
+            with connection.cursor() as cursor:
+                cursor.execute("UPDATE users SET First_Name = %s, Last_Name = %s, Email = %s, Phone_Number = %s WHERE User_ID = %s", [first_name, last_name, email, phone_number, user_id])
+                connection.commit()
+            return redirect('profile')
